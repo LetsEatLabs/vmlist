@@ -2,6 +2,11 @@
 
 {% block content %}
     <h1>{% block title %} Mythos VM List {% endblock %}</h1>
+    <b>VM Ram Usage:</b> {{ ram_used[0] }} / {{ total_ram }}
+    <br>
+    <b>VM CPU Usage:</b> {{ cpus_used[0] }} / {{ total_cpus }}
+    <br>
+    <br>
     <hr>
     {% for vm in vms %}
         <h3>{{ vm['name'] }}</h2> 

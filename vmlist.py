@@ -1,6 +1,7 @@
 import sqlite3
 from flask import Flask, render_template, request, url_for, flash, redirect
 import uuid
+from src import compcalc
 
 # Connection function for each load
 def sqlcon():
@@ -26,8 +27,16 @@ app.config['SECRET_KEY'] = str(uuid.uuid4())
 @app.route("/")
 def listrender():
     conn = sqlcon()
-    curr_vms = conn.execute("SELECT * FROM vms").fetchall()
-    return render_template('index.html', vms=curr_vms)
+    cursor = conn.cursor()
+    curr_vms = cursor.execute("SELECT * FROM vms").fetchall()
+    cpus_used = cursor.execute("SELECT SUM(cpu_cores) from vms").fetchone()
+    ram_used = cursor.execute("SELECT SUM(rammb) from vms").fetchone()
+    return render_template('index.html', 
+                            vms=curr_vms, 
+                            total_cpus=compcalc.get_total_cpus(), 
+                            total_ram=compcalc.get_total_ram(),
+                            ram_used=ram_used,
+                            cpus_used=cpus_used)
 
 @app.route("/<string:vmid>/delete", methods=["POST"])
 def delete(vmid):
