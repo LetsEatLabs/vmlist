@@ -7,7 +7,7 @@ def get_total_cpus():
     #return int(subprocess.getoutput("cat /proc/cpuinfo | grep processor | wc -l"))
 
 def get_total_ram():
-    return round((psutil.virtual_memory().total / 1000000) - 1000) # Apparently it aims high by 1G
+    return round((psutil.virtual_memory().total / 1000000)) # Apparently it aims high by 1G
 
 
 
