@@ -2,9 +2,13 @@ import sqlite3
 from flask import Flask, render_template, request, url_for, flash, redirect
 import uuid
 from src import compcalc
+from src import logger as lg
 
 # Connection function for each load
 def sqlcon():
+    """
+    Returns connections object to vm.db
+    """
     connection = sqlite3.connect("./vm.db", check_same_thread=False)
     connection.row_factory = sqlite3.Row
     return connection
@@ -23,28 +27,45 @@ with sqlcon() as connection:
 app = Flask(__name__)
 app.config['SECRET_KEY'] = str(uuid.uuid4())
 
+lg.write("Application has started.")
+
 # Root page
 @app.route("/")
 def listrender():
-    conn = sqlcon()
-    cursor = conn.cursor()
-    curr_vms = cursor.execute("SELECT * FROM vms").fetchall()
-    cpus_used = cursor.execute("SELECT SUM(cpu_cores) from vms").fetchone()
-    ram_used = cursor.execute("SELECT SUM(rammb) from vms").fetchone()
-    return render_template('index.html', 
-                            vms=curr_vms, 
-                            total_cpus=compcalc.get_total_cpus(), 
-                            total_ram=compcalc.get_total_ram(),
-                            ram_used=ram_used,
-                            cpus_used=cpus_used)
+    with sqlcon() as conn:
+
+        cursor = conn.cursor()
+        curr_vms = cursor.execute("SELECT * FROM vms").fetchall()
+        cpus_used = cursor.execute("SELECT SUM(cpu_cores) from vms").fetchone()
+        ram_used = cursor.execute("SELECT SUM(rammb) from vms").fetchone()
+        
+        return render_template('index.html', 
+                                vms=curr_vms, 
+                                total_cpus=compcalc.get_total_cpus(), 
+                                total_ram=compcalc.get_total_ram(),
+                                ram_used=ram_used,
+                                cpus_used=cpus_used)
+
+
 
 @app.route("/<string:vmid>/delete", methods=["POST"])
 def delete(vmid):
     with sqlcon() as conn:
-        conn.execute('DELETE FROM vms WHERE uuid = ?', (vmid,))
-        conn.execute("COMMIT")
+        cursor = conn.cursor()
+        
+        vmdetails = cursor.execute("SELECT name, purpose FROM vms WHERE uuid = ?", (vmid,)).fetchone()
+        vmname = vmdetails[0]
+        vmpurpose = vmdetails[1]
+
+        cursor.execute('DELETE FROM vms WHERE uuid = ?', (vmid,))
+        cursor.execute("COMMIT")
+
+        lg.write(f"VM {vmid} ({vmname} - {vmpurpose}) has been deleted by {request.remote_addr}")
+
         flash(f"VM ID {vmid} was successfully deleted!")
         return redirect(url_for('listrender'))
+
+
 
 @app.route("/add/", methods=["POST"])
 def add():
@@ -60,6 +81,9 @@ def add():
         rammb = request.form['rammb']
         ops = request.form['ops']
 
+        lg.write(f"VM {vmuuid} created from {request.remote_addr} - Name: {vmname} Creator: {creator} Purpose: '{purpose}' IP: {ip} CPU_Cores: {cpu_cores} RAM: {rammb} OS: {ops}")
+        
         conn.execute("""INSERT INTO vms(uuid, name, creator, purpose, ip, cpu_cores, rammb, os) VALUES(?,?,?,?,?,?,?,?)""", (vmuuid, vmname, creator, purpose, ip, cpu_cores, rammb, ops))
         conn.commit()
-        return redirect(url_for('listrender'))
+    
+    return redirect(url_for('listrender'))
