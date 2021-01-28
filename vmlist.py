@@ -87,3 +87,8 @@ def add():
         conn.commit()
     
     return redirect(url_for('listrender'))
+
+@app.route("/logs/")
+def getlogs():
+    logfile = [x.strip() for x in open("./vmlist.log", "r").readlines()]
+    return render_template("logs.html", logfile=logfile)
