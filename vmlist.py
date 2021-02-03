@@ -99,7 +99,20 @@ def view(vmid):
     with sqlcon() as conn:
 
         cursor = conn.cursor()
-        curr_vm = cursor.execute("SELECT name, purpose FROM vms WHERE uuid = ?", (vmid,)).fetchone()
-        print(curr_vm)
+        curr_vm = cursor.execute("SELECT * FROM vms WHERE uuid = ?", (vmid,)).fetchone()
 
     return render_template("view.html", vm=curr_vm)
+
+@app.route("/modify/<string:vmid>", methods=["POST"])
+def modify(vmid):
+
+    with sqlcon() as conn:
+        ## Build our query
+        vmid = request.form['vmid']
+        vmname = request.form['vmname']
+        creator = request.form['creator']
+        purpose = request.form['purpose']
+        ip = request.form['ipaddr']
+        cpu_cores = request.form['cpus']
+        rammb = request.form['rammb']
+        ops = request.form['ops']
