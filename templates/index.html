@@ -24,9 +24,7 @@
         <br>
         <b>OS:</b> {{ vm['os'] }}
         <br>
-        <form action="{{ url_for('delete', vmid=vm['uuid']) }}" method="POST">
-            <input type="submit" value="Delete" onclick="return confirm('Are you sure you want to delete this VM?')">
-        </form>
+        <a href="{{ url_for('view', vmid=vm['uuid']) }}"><button>View/Modify</button></a>
         <hr>
     {% endfor %}
     <form action="{{ url_for('add') }}" method="POST">
@@ -40,6 +38,5 @@
         <input type="submit" value="Add"></input>
     </form>
     <br>
-    <a href=logs><button>View Logs</button></a>
     
 {% endblock %}

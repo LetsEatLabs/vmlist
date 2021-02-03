@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<form action="{{ url_for('modify', vmid=vm['uuid']) }}" method="POST">
+    <input type="text" name="vmid" placeholder="VM ID" class="vmid form-control" value="{{ request.form['vmid'] }}" disabled></input>
+    <input type="text" name="vmname" placeholder="VM name" class="vmname form-control" value="{{ request.form['vmname'] }}"></input>
+    <input type="text" name="creator" placeholder="Your name" class="creator form-control" value="{{ request.form['creator'] }}"></input>
+    <input type="text" name="purpose" placeholder="Purpose" class="purpose form-control" value="{{ request.form['purpose'] }}"></input>
+    <input type="text" name="ipaddr" placeholder="IP address" class="ipaddr form-control" value="{{ request.form['ipaddr'] }}"></input>
+    <input type="text" name="cpus" placeholder="Number CPUs" class="cpus form-control" value="{{ request.form['cpus'] }}"></input>
+    <input type="text" name="rammb" placeholder="RAM (in MBs)" class="rammb form-control" value="{{ request.form['rammb'] }}"></input>
+    <input type="text" name="ops" placeholder="Operating system" class="ops form-control" value="{{ request.form['ops'] }}"></input>
+    <input type="submit" value="Modify"></input>
+</form>
+
+
+<form action="{{ url_for('delete', vmid=vm['uuid']) }}" method="POST">
+    <input type="submit" value="Delete" onclick="return confirm('Are you sure you want to delete this VM?')">
+</form>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    var vmname = "{{ vm['name'] }}"
+    var creator = "{{ vm['creator'] }}"
+    var purpose = "{{ vm['purpose'] }}"
+    var ipaddr = "{{ vm['ip'] }}"
+    var cpus = "{{ vm['cpu_cores'] }}"
+    var rammb = "{{ vm['rammb'] }}"
+    var ops = "{{ vm['os'] }}"
+    var vmid = "{{ vm['uuid'] }}"
+
+    $(".vmname").val(vmname)
+    $(".creator").val(creator)
+    $(".purpose").val(purpose)
+    $(".ipaddr").val(ipaddr)
+    $(".cpus").val(cpus)
+    $(".rammb").val(rammb)
+    $(".ops").val(ops)
+    $(".vmid").val(vmid)
+</script>
+{% endblock %}

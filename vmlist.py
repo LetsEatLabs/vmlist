@@ -48,7 +48,7 @@ def listrender():
 
 
 
-@app.route("/<string:vmid>/delete", methods=["POST"])
+@app.route("/delete/<string:vmid>", methods=["POST"])
 def delete(vmid):
     with sqlcon() as conn:
         cursor = conn.cursor()
@@ -92,3 +92,33 @@ def add():
 def getlogs():
     logfile = [x.strip() for x in open("./vmlist.log", "r").readlines()]
     return render_template("logs.html", logfile=logfile)
+
+@app.route("/view/<string:vmid>")
+def view(vmid):
+
+    with sqlcon() as conn:
+
+        cursor = conn.cursor()
+        curr_vm = cursor.execute("SELECT * FROM vms WHERE uuid = ?", (vmid,)).fetchone()
+
+    return render_template("view.html", vm=curr_vm)
+
+@app.route("/modify/<string:vmid>", methods=["POST"])
+def modify(vmid):
+
+    with sqlcon() as conn:
+        ## Build our query
+        vmname = request.form['vmname']
+        creator = request.form['creator']
+        purpose = request.form['purpose']
+        ip = request.form['ipaddr']
+        cpu_cores = request.form['cpus']
+        rammb = request.form['rammb']
+        ops = request.form['ops']
+
+        lg.write(f"VM {vmid} modified from {request.remote_addr} - Name: {vmname} Creator: {creator} Purpose: '{purpose}' IP: {ip} CPU_Cores: {cpu_cores} RAM: {rammb} OS: {ops}")
+
+        cursor = conn.cursor()
+        cursor.execute("""UPDATE vms SET name = ?, creator = ?, purpose = ?, ip = ?, cpu_cores = ?, rammb = ?, os = ? WHERE uuid = ?""", (vmname, creator, purpose, ip, cpu_cores, rammb, ops, vmid))
+
+        return redirect(url_for('listrender'))

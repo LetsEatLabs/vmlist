@@ -3,12 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <title>VM Manager</title>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/jquery-3.5.1.min.js') }}"></script>
 </head>
 <body>
     <div class="container">
+        <a href="/"><button>Home</button></a>
+        <a href="/logs/"><button>View Logs</button></a>
+        <hr>
         {% block content %} {% endblock %}
     </div>
 
 
 </body>
+{% block scripts %} {% endblock %}
 </html>

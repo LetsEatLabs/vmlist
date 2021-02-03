@@ -3,3 +3,4 @@ vm.db
 __pycache__
 tmp_*
 *.log
+.vscode
