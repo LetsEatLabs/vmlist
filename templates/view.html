@@ -2,7 +2,7 @@
 
 {% block content %}
 
-<form action="{{ url_for('add') }}" method="POST">
+<form action="{{ url_for('modify', vmid=vm['uuid']) }}" method="POST">
     <input type="text" name="vmid" placeholder="VM ID" class="vmid form-control" value="{{ request.form['vmid'] }}" disabled></input>
     <input type="text" name="vmname" placeholder="VM name" class="vmname form-control" value="{{ request.form['vmname'] }}"></input>
     <input type="text" name="creator" placeholder="Your name" class="creator form-control" value="{{ request.form['creator'] }}"></input>
@@ -11,7 +11,7 @@
     <input type="text" name="cpus" placeholder="Number CPUs" class="cpus form-control" value="{{ request.form['cpus'] }}"></input>
     <input type="text" name="rammb" placeholder="RAM (in MBs)" class="rammb form-control" value="{{ request.form['rammb'] }}"></input>
     <input type="text" name="ops" placeholder="Operating system" class="ops form-control" value="{{ request.form['ops'] }}"></input>
-    <input type="submit" value="Modify Values"></input>
+    <input type="submit" value="Modify"></input>
 </form>
 
 

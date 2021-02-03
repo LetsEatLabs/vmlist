@@ -108,7 +108,6 @@ def modify(vmid):
 
     with sqlcon() as conn:
         ## Build our query
-        vmid = request.form['vmid']
         vmname = request.form['vmname']
         creator = request.form['creator']
         purpose = request.form['purpose']
@@ -116,3 +115,10 @@ def modify(vmid):
         cpu_cores = request.form['cpus']
         rammb = request.form['rammb']
         ops = request.form['ops']
+
+        lg.write(f"VM {vmid} modified from {request.remote_addr} - Name: {vmname} Creator: {creator} Purpose: '{purpose}' IP: {ip} CPU_Cores: {cpu_cores} RAM: {rammb} OS: {ops}")
+
+        cursor = conn.cursor()
+        cursor.execute("""UPDATE vms SET name = ?, creator = ?, purpose = ?, ip = ?, cpu_cores = ?, rammb = ?, os = ? WHERE uuid = ?""", (vmname, creator, purpose, ip, cpu_cores, rammb, ops, vmid))
+
+        return redirect(url_for('listrender'))
