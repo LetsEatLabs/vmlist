@@ -48,7 +48,7 @@ def listrender():
 
 
 
-@app.route("/<string:vmid>/delete", methods=["POST"])
+@app.route("/delete/<string:vmid>", methods=["POST"])
 def delete(vmid):
     with sqlcon() as conn:
         cursor = conn.cursor()
@@ -92,3 +92,14 @@ def add():
 def getlogs():
     logfile = [x.strip() for x in open("./vmlist.log", "r").readlines()]
     return render_template("logs.html", logfile=logfile)
+
+@app.route("/view/<string:vmid>")
+def view(vmid):
+
+    with sqlcon() as conn:
+
+        cursor = conn.cursor()
+        curr_vm = cursor.execute("SELECT name, purpose FROM vms WHERE uuid = ?", (vmid,)).fetchone()
+        print(curr_vm)
+
+    return render_template("view.html", vm=curr_vm)
