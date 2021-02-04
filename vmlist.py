@@ -18,7 +18,7 @@ with sqlcon() as connection:
 
     # Create sqlite db if it does not exist
     try:
-        cursor.execute("CREATE TABLE vms (uuid TEXT, name TEXT, creator TEXT, purpose TEXT, ip TEXT, cpu_cores INTEGER, rammb INTEGER, os TEXT)")
+        cursor.execute("CREATE TABLE vms (uuid TEXT, name TEXT, creator TEXT, purpose TEXT, ip TEXT, cpu_cores INTEGER, rammb INTEGER, os TEXT, active TEXT)")
     except:
         pass
 
