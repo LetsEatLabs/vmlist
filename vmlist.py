@@ -122,3 +122,11 @@ def modify(vmid):
         cursor.execute("""UPDATE vms SET name = ?, creator = ?, purpose = ?, ip = ?, cpu_cores = ?, rammb = ?, os = ? WHERE uuid = ?""", (vmname, creator, purpose, ip, cpu_cores, rammb, ops, vmid))
 
         return redirect(url_for('listrender'))
+
+
+@app.route("/activate/<string:vmid>")
+def activate():
+    with sqlcon() as conn:
+        cursor = conn.cursor()
+
+    return redirect(url_for('listrender'))
