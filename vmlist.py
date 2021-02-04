@@ -132,7 +132,14 @@ def activate(vmid):
 
         if vmstate != "yes":
             cursor.execute("""UPDATE vms SET active = ? WHERE uuid = ?""", ("yes", vmid))
+            vmstate = "yes"
+
+            lg.write(f"VM {vmid} has been marked as {vmstate} by {request.remote_addr}")
+
         else:
             cursor.execute("""UPDATE vms SET active = ? WHERE uuid = ?""", ("no", vmid))
+            vmstate = "yes"
+
+            lg.write(f"VM {vmid} has been marked as {vmstate} by {request.remote_addr}")
 
     return redirect(url_for('listrender'))
