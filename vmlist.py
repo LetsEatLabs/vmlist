@@ -83,7 +83,7 @@ def add():
 
         lg.write(f"VM {vmuuid} created from {request.remote_addr} - Name: {vmname} Creator: {creator} Purpose: '{purpose}' IP: {ip} CPU_Cores: {cpu_cores} RAM: {rammb} OS: {ops}")
         
-        conn.execute("""INSERT INTO vms(uuid, name, creator, purpose, ip, cpu_cores, rammb, os) VALUES(?,?,?,?,?,?,?,?)""", (vmuuid, vmname, creator, purpose, ip, cpu_cores, rammb, ops))
+        conn.execute("""INSERT INTO vms(uuid, name, creator, purpose, ip, cpu_cores, rammb, os, active) VALUES(?,?,?,?,?,?,?,?)""", (vmuuid, vmname, creator, purpose, ip, cpu_cores, rammb, ops, "yes"))
         conn.commit()
     
     return redirect(url_for('listrender'))
