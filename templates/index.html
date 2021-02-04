@@ -24,8 +24,13 @@
         <br>
         <b>OS:</b> {{ vm['os'] }}
         <br>
+        <b>Active:</b> {{ vm['active'] }}
+        <br>
+        <br>
         <a href="{{ url_for('view', vmid=vm['uuid']) }}"><button>View/Modify</button></a>
-        <a href="{{ url_for('activate', vmid=vm['uuid']) }}"><button>Activate/Deactivate</button></a>
+        <form action="{{ url_for('activate', vmid=vm['uuid']) }}" method="POST">
+            <input type="submit" value="Activate/Deactivate">
+        </form>
         <hr>
     {% endfor %}
     <form action="{{ url_for('add') }}" method="POST">
