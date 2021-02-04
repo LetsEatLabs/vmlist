@@ -36,8 +36,8 @@ def listrender():
 
         cursor = conn.cursor()
         curr_vms = cursor.execute("SELECT * FROM vms").fetchall()
-        cpus_used = cursor.execute("SELECT SUM(cpu_cores) from vms").fetchone()
-        ram_used = cursor.execute("SELECT SUM(rammb) from vms").fetchone()
+        cpus_used = cursor.execute("SELECT SUM(cpu_cores) from vms WHERE active='yes'").fetchone()
+        ram_used = cursor.execute("SELECT SUM(rammb) from vms WHERE active='yes'").fetchone()
         
         return render_template('index.html', 
                                 vms=curr_vms, 
