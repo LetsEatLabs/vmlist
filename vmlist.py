@@ -124,9 +124,15 @@ def modify(vmid):
         return redirect(url_for('listrender'))
 
 
-@app.route("/activate/<string:vmid>")
-def activate():
+@app.route("/activate/<string:vmid>", methods=["POST"])
+def activate(vmid):
     with sqlcon() as conn:
         cursor = conn.cursor()
+        vmstate = cursor.execute("SELECT active FROM vms WHERE uuid = ?", (vmid,))
+
+        if vmstate != "yes":
+            cursor.execute("""UPDATE vms SET active = ? WHERE uuid = ?""", ("yes", vmid))
+        else:
+            cursor.execute("""UPDATE vms SET active = ? WHERE uuid = ?""", ("no", vmid))
 
     return redirect(url_for('listrender'))
