@@ -1,0 +1,23 @@
+body {
+    background-color: #0F1719;
+    color: white;
+}
+
+.container {
+    width: 600px;
+}
+
+hr {
+    width: 600px;
+}
+
+.wrap {
+    margin: auto;
+    background-color: #325338;
+    border: 2px solid white;
+    width: 500px;
+}
+
+.add-area {
+    padding: 10px;
+}
