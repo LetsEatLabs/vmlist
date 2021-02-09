@@ -1,48 +1,59 @@
 {% extends 'base.html' %}
 
 {% block content %}
-    <h1>{% block title %} Mythos VM List {% endblock %}</h1>
+<div class='container'>
+<div class='text-center header wrap'>
+    <h1 >{% block title %} Mythos VM List {% endblock %}</h1>
     <b>VM Ram Usage:</b> {{ ram_used[0] }} / {{ total_ram }}
     <br>
     <b>VM CPU Usage:</b> {{ cpus_used[0] }} / {{ total_cpus }}
     <br>
     <br>
+</div>
     <hr>
     {% for vm in vms %}
+    <div class="wrap text-center">
         <h3>{{ vm['name'] }}</h2> 
         <b>UUID:</b> {{ vm['uuid'] }} 
         <br>
         <b>Creator:</b> {{ vm['creator'] }}
-        <br>
         <b>Purpose:</b> "{{ vm['purpose'] }}"
         <br>
-        <b>IP Address:</b> {{ vm['ip'] }}
-        <br>
         <b>CPU Cores:</b> {{ vm['cpu_cores'] }}
-        <br>
         <b>Ram (MB):</b> {{ vm['rammb'] }}
-        <br>
         <b>OS:</b> {{ vm['os'] }}
+        <br>
+        <b>IP Address:</b> {{ vm['ip'] }}
         <br>
         <b>Active:</b> {{ vm['active'] }}
         <br>
         <br>
-        <a href="{{ url_for('view', vmid=vm['uuid']) }}"><button>View/Modify</button></a>
         <form action="{{ url_for('activate', vmid=vm['uuid']) }}" method="POST">
-            <input type="submit" value="Activate/Deactivate">
+            <input class="btn btn-warning" type="submit" value="Activate/Deactivate">
         </form>
+        <a href="{{ url_for('view', vmid=vm['uuid']) }}"><button class='btn btn-primary'>View/Modify</button></a>
+        <p></p>
+    </div>
         <hr>
     {% endfor %}
-    <form action="{{ url_for('add') }}" method="POST">
-        <input type="text" name="vmname" placeholder="VM name" class="form-control" value="{{ request.form['vmname'] }}"></input>
-        <input type="text" name="creator" placeholder="Your name" class="form-control" value="{{ request.form['creator'] }}"></input>
-        <input type="text" name="purpose" placeholder="Purpose" class="form-control" value="{{ request.form['purpose'] }}"></input>
-        <input type="text" name="ipaddr" placeholder="IP address" class="form-control" value="{{ request.form['ipaddr'] }}"></input>
-        <input type="text" name="cpus" placeholder="Number CPUs" class="form-control" value="{{ request.form['cpus'] }}"></input>
-        <input type="text" name="rammb" placeholder="RAM (in MBs)" class="form-control" value="{{ request.form['rammb'] }}"></input>
-        <input type="text" name="ops" placeholder="Operating system" class="form-control" value="{{ request.form['ops'] }}"></input>
-        <input type="submit" value="Add"></input>
-    </form>
+    <div class='wrap add-area'>
+        <form action="{{ url_for('add') }}" method="POST">
+            <input type="text" name="vmname" placeholder="VM name" class="form-control" value="{{ request.form['vmname'] }}"></input>
+            <input type="text" name="creator" placeholder="Your name" class="form-control" value="{{ request.form['creator'] }}"></input>
+            <input type="text" name="purpose" placeholder="Purpose" class="form-control" value="{{ request.form['purpose'] }}"></input>
+            <input type="text" name="ipaddr" placeholder="IP address" class="form-control" value="{{ request.form['ipaddr'] }}"></input>
+            <input type="text" name="cpus" placeholder="Number CPUs" class="form-control" value="{{ request.form['cpus'] }}"></input>
+            <input type="text" name="rammb" placeholder="RAM (in MBs)" class="form-control" value="{{ request.form['rammb'] }}"></input>
+            <input type="text" name="ops" placeholder="Operating system" class="form-control" value="{{ request.form['ops'] }}"></input>
+            <input type="submit" value="Add"></input>
+        </form>
+    </div>
     <br>
+</div>
+</div>
     
+{% endblock %}
+
+{% block scripts %}
+
 {% endblock %}
