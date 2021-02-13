@@ -16,11 +16,18 @@ def sqlcon():
 with sqlcon() as connection:
     cursor = connection.cursor()
 
-    # Create sqlite db if it does not exist
+    # Create sqlite db if it does not exist. Generate initially used tables as well.
     try:
         cursor.execute("CREATE TABLE vms (uuid TEXT, name TEXT, creator TEXT, purpose TEXT, ip TEXT, cpu_cores INTEGER, rammb INTEGER, os TEXT, active TEXT)")
     except:
         pass
+
+    try:
+        cursor.execute("CREATE TABLE pc (zero INTEGER, rammb INTEGER, cpus INTEGER)")
+        cursor.execute("INSERT INTO pc(zero, rammb, cpus) VALUES(?,?,?)", (0, 1024, 2))
+    except:
+        pass
+    
 
 
 # Load flask
@@ -38,11 +45,13 @@ def listrender():
         curr_vms = cursor.execute("SELECT * FROM vms").fetchall()
         cpus_used = cursor.execute("SELECT SUM(cpu_cores) from vms WHERE active='yes'").fetchone()
         ram_used = cursor.execute("SELECT SUM(rammb) from vms WHERE active='yes'").fetchone()
+        cpuinfo = cursor.execute("SELECT cpus FROM pc WHERE zero = 0").fetchone()
+        raminfo = cursor.execute("SELECT rammb FROM pc WHERE zero = 0").fetchone()
         
         return render_template('index.html', 
                                 vms=curr_vms, 
-                                total_cpus=compcalc.get_total_cpus(), 
-                                total_ram=compcalc.get_total_ram(),
+                                total_cpus=cpuinfo[0], 
+                                total_ram=raminfo[0],
                                 ram_used=ram_used,
                                 cpus_used=cpus_used)
 
@@ -145,3 +154,29 @@ def activate(vmid):
             lg.write(f"VM {vmid} has been marked as active={vmstate} by {request.remote_addr}")
 
     return redirect(url_for('listrender'))
+
+@app.route("/cpuinfo/")
+def set_pc_info():
+
+    with sqlcon() as conn:
+
+        cursor = conn.cursor()
+        cpuinfo = cursor.execute("SELECT cpus FROM pc WHERE zero = 0").fetchone()
+        raminfo = cursor.execute("SELECT rammb FROM pc WHERE zero = 0").fetchone()
+
+    return render_template("pcinfo.html", cpuinfo=cpuinfo[0], raminfo=raminfo[0])
+
+@app.route("/cpuinfo/modify", methods=['POST'])
+def change_pc_info():
+    with sqlcon() as conn:
+        cursor = conn.cursor()
+
+        raminfo = request.form['raminfo']
+        cpuinfo = request.form['cpuinfo']
+
+        cursor.execute("""UPDATE pc SET rammb = ?, cpus = ? WHERE zero = ?""", (raminfo, cpuinfo, 0))
+        lg.write(f"Host information has been modified. New configuration is {cpuinfo} CPUs and {raminfo} MBs of memory. Change made by {request.remote_addr}")
+
+    return redirect(url_for('listrender'))
+
+        

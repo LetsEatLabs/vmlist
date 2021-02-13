@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class='wrap add-area'>
+    <form  action="{{ url_for('change_pc_info') }}" method="POST">
+        <input type="text" name="raminfo" placeholder="RAM Info" class="raminfo form-control" value="{{ request.form['raminfo'] }}"></input>
+        <input type="text" name="cpuinfo" placeholder="CPU Info" class="cpuinfo form-control" value="{{ request.form['cpuinfo'] }}"></input>
+        <br>
+        <input  class='btn btn-warning' type="submit" value="Modify"></input>
+    </form>
+    </div>
+{% endblock %}
+
+
+{% block scripts %}
+<script>
+    var raminfo = "{{ raminfo }}"
+    var cpuinfo = "{{ cpuinfo }}"
+
+    $(".raminfo").val(raminfo)
+    $(".cpuinfo").val(cpuinfo)
+</script>
+{% endblock %}
