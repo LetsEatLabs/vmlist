@@ -164,7 +164,7 @@ def set_pc_info():
         cpuinfo = cursor.execute("SELECT cpus FROM pc WHERE zero = 0").fetchone()
         raminfo = cursor.execute("SELECT rammb FROM pc WHERE zero = 0").fetchone()
 
-    return render_template("pcinfo.html", cpuinfo=cpuinfo, raminfo=raminfo)
+    return render_template("pcinfo.html", cpuinfo=cpuinfo[0], raminfo=raminfo[0])
 
 @app.route("/cpuinfo/modify", methods=['POST'])
 def change_pc_info():
