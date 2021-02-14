@@ -20,4 +20,4 @@ $ docker container restart vmlist
 
 Screenshot:
 
-![./screenshot.png](./screeshot.png)
+![./screenshot.png](https://raw.githubusercontent.com/LetsEatLabs/vmlist/main/screenshot.png)
