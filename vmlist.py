@@ -19,7 +19,7 @@ with sqlcon() as connection:
     # Create sqlite db if it does not exist. Generate initially used tables as well.
     try:
         cursor.execute("""CREATE TABLE vms (uuid TEXT, name TEXT, creator TEXT, purpose TEXT, 
-                        ip TEXT, cpu_cores INTEGER, rammb INTEGER, os TEXT, active TEXT)""")
+                        ip TEXT, fqdn TEXT, cpu_cores INTEGER, rammb INTEGER, os TEXT, active TEXT)""")
     except:
         pass
 
@@ -124,17 +124,18 @@ def modify(vmid):
         creator = request.form['creator']
         purpose = request.form['purpose']
         ip = request.form['ipaddr']
+        fqdn = request.form['fqdn']
         cpu_cores = request.form['cpus']
         rammb = request.form['rammb']
         ops = request.form['ops']
 
         lg.write(f"VM {vmid} modified from {request.remote_addr} - Name: {vmname} \
-                    Creator: {creator} Purpose: '{purpose}' IP: {ip} CPU_Cores: {cpu_cores} RAM: {rammb} OS: {ops}")
+                    Creator: {creator} Purpose: '{purpose}' IP: {ip} FQDN: {fqdn} CPU_Cores: {cpu_cores} RAM: {rammb} OS: {ops}")
 
         cursor = conn.cursor()
         cursor.execute("""UPDATE vms 
-                        SET name = ?, creator = ?, purpose = ?, ip = ?, cpu_cores = ?, rammb = ?, os = ? 
-                        WHERE uuid = ?""", (vmname, creator, purpose, ip, cpu_cores, rammb, ops, vmid))
+                        SET name = ?, creator = ?, purpose = ?, ip = ?, fqdn = ?, cpu_cores = ?, rammb = ?, os = ? 
+                        WHERE uuid = ?""", (vmname, creator, purpose, ip, fqdn, cpu_cores, rammb, ops, vmid))
 
         return redirect(url_for('listrender'))
 
