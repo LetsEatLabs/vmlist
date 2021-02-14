@@ -18,7 +18,8 @@ with sqlcon() as connection:
 
     # Create sqlite db if it does not exist. Generate initially used tables as well.
     try:
-        cursor.execute("CREATE TABLE vms (uuid TEXT, name TEXT, creator TEXT, purpose TEXT, ip TEXT, cpu_cores INTEGER, rammb INTEGER, os TEXT, active TEXT)")
+        cursor.execute("""CREATE TABLE vms (uuid TEXT, name TEXT, creator TEXT, purpose TEXT, 
+                        ip TEXT, cpu_cores INTEGER, rammb INTEGER, os TEXT, active TEXT)""")
     except:
         pass
 
@@ -90,9 +91,11 @@ def add():
         rammb = request.form['rammb']
         ops = request.form['ops']
 
-        lg.write(f"VM {vmuuid} created from {request.remote_addr} - Name: {vmname} Creator: {creator} Purpose: '{purpose}' IP: {ip} CPU_Cores: {cpu_cores} RAM: {rammb} OS: {ops}")
+        lg.write(f"VM {vmuuid} created from {request.remote_addr} - Name: {vmname} Creator: {creator} \
+                    Purpose: '{purpose}' IP: {ip} CPU_Cores: {cpu_cores} RAM: {rammb} OS: {ops}")
         
-        conn.execute("""INSERT INTO vms(uuid, name, creator, purpose, ip, cpu_cores, rammb, os, active) VALUES(?,?,?,?,?,?,?,?,?)""", (vmuuid, vmname, creator, purpose, ip, cpu_cores, rammb, ops, "yes"))
+        conn.execute("""INSERT INTO vms(uuid, name, creator, purpose, ip, cpu_cores, rammb, os, active) 
+                        VALUES(?,?,?,?,?,?,?,?,?)""", (vmuuid, vmname, creator, purpose, ip, cpu_cores, rammb, ops, "yes"))
         conn.commit()
     
     return redirect(url_for('listrender'))
@@ -125,10 +128,13 @@ def modify(vmid):
         rammb = request.form['rammb']
         ops = request.form['ops']
 
-        lg.write(f"VM {vmid} modified from {request.remote_addr} - Name: {vmname} Creator: {creator} Purpose: '{purpose}' IP: {ip} CPU_Cores: {cpu_cores} RAM: {rammb} OS: {ops}")
+        lg.write(f"VM {vmid} modified from {request.remote_addr} - Name: {vmname} \
+                    Creator: {creator} Purpose: '{purpose}' IP: {ip} CPU_Cores: {cpu_cores} RAM: {rammb} OS: {ops}")
 
         cursor = conn.cursor()
-        cursor.execute("""UPDATE vms SET name = ?, creator = ?, purpose = ?, ip = ?, cpu_cores = ?, rammb = ?, os = ? WHERE uuid = ?""", (vmname, creator, purpose, ip, cpu_cores, rammb, ops, vmid))
+        cursor.execute("""UPDATE vms 
+                        SET name = ?, creator = ?, purpose = ?, ip = ?, cpu_cores = ?, rammb = ?, os = ? 
+                        WHERE uuid = ?""", (vmname, creator, purpose, ip, cpu_cores, rammb, ops, vmid))
 
         return redirect(url_for('listrender'))
 
@@ -175,7 +181,8 @@ def change_pc_info():
         cpuinfo = request.form['cpuinfo']
 
         cursor.execute("""UPDATE pc SET rammb = ?, cpus = ? WHERE zero = ?""", (raminfo, cpuinfo, 0))
-        lg.write(f"Host information has been modified. New configuration is {cpuinfo} CPUs and {raminfo} MBs of memory. Change made by {request.remote_addr}")
+        lg.write(f"Host information has been modified. New configuration is {cpuinfo} CPUs and {raminfo} \
+                    MBs of memory. Change made by {request.remote_addr}")
 
     return redirect(url_for('listrender'))
 
