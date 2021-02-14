@@ -8,6 +8,7 @@
     <input type="text" name="creator" placeholder="Your name" class="creator form-control" value="{{ request.form['creator'] }}"></input>
     <input type="text" name="purpose" placeholder="Purpose" class="purpose form-control" value="{{ request.form['purpose'] }}"></input>
     <input type="text" name="ipaddr" placeholder="IP address" class="ipaddr form-control" value="{{ request.form['ipaddr'] }}"></input>
+    <input type="text" name="fqdn" placeholder="FQDN" class="fqdn form-control" value="{{ request.form['fqdn'] }}"></input>
     <input type="text" name="cpus" placeholder="Number CPUs" class="cpus form-control" value="{{ request.form['cpus'] }}"></input>
     <input type="text" name="rammb" placeholder="RAM (in MBs)" class="rammb form-control" value="{{ request.form['rammb'] }}"></input>
     <input type="text" name="ops" placeholder="Operating system" class="ops form-control" value="{{ request.form['ops'] }}"></input>
@@ -34,6 +35,7 @@
     var rammb = "{{ vm['rammb'] }}"
     var ops = "{{ vm['os'] }}"
     var vmid = "{{ vm['uuid'] }}"
+    var fqdn = "{{ vm['fqdn'] }}"
 
     $(".vmname").val(vmname)
     $(".creator").val(creator)
@@ -43,5 +45,6 @@
     $(".rammb").val(rammb)
     $(".ops").val(ops)
     $(".vmid").val(vmid)
+    $(".fqdn").val(fqdn)
 </script>
 {% endblock %}
