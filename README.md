@@ -1,3 +1,5 @@
+Note: We will not be updating this application. We switched from raw KVM to Proxmox and this is entirely not needed any longer.
+
 To build:
 
 ```
